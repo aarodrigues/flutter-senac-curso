@@ -12,12 +12,16 @@ class TouchDetector extends StatefulWidget {
 }
 
 class _TouchDetectorState extends State<TouchDetector> {
-  late Timer _timer;
+  // O tempo inicial do contador regressivo
   static const initialTime = 3;
+  // Atribui o tempo inicial a variavel _start
   int _start = initialTime;
+  // Define a variaveis do tipo GlobalKey responsaveis por acessar as propriedades do widget
+  // com o qual ela esteja associada
   GlobalKey stickyKey = GlobalKey();
   GlobalKey circlekey = GlobalKey();
 
+  // Define uma lista do tipo Color que contem cores do material design
   List<Color> colorList = [
     Colors.red,
     Colors.black,
@@ -29,14 +33,18 @@ class _TouchDetectorState extends State<TouchDetector> {
     Colors.grey
   ];
 
+  // define a variavel index para a lista de cores e inicializa a variavel com o valor 0
   int colorIndex = 0;
-
+  // Define a posicao vertical inicial do ponto
   double verticalPosition = 315;
+  // Define a posicao horizontal inicial do ponto
   double horizontalPosition = 165;
-
+  // Define uma variavel para armazenar os pontos do jogador. Incializa ela com 0
   int points = 0;
+  // variavel que controla se o contador inciou ou nao
   bool _started = false;
 
+  // Metodo flutter responsavel por criar a visualizacao da tela
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -53,16 +61,26 @@ class _TouchDetectorState extends State<TouchDetector> {
           body: Padding(
             padding: const EdgeInsets.all(20),
             child: Container(
+              // Associa a globalkey ao widget Container
               key: stickyKey,
               width: double.infinity,
               height: double.infinity,
               color: Colors.white,
+              // Widget responsavel por suportar sobreposicao de widgets
               child: Stack(
                 children: [
+                  // Widget responsavel por fornecer o contexto correto ao Positioned
                   Builder(
                     builder: (context) => Positioned(
+                      /**
+                       * Baseado e m um eixo cartesiano de x e y  foi utilizado o atributo left no qual
+                       * possibilita o deslocamento em x e o atributo top no qual possibilita o deslocamento em
+                       * y, posionando assim o esfera em qualquer posicao do plano cartesiano representado pelo
+                       * widget Container onde a esfera foi inserida.
+                       */
                       left: horizontalPosition,
                       top: verticalPosition,
+                      // Funcao que gera a bolinha
                       child: generateBall(context),
                     ),
                   ),
@@ -75,42 +93,56 @@ class _TouchDetectorState extends State<TouchDetector> {
     );
   }
 
+  // Gerar uma indice usado para exibir uma cor da lista definida
   void randomColor() {
     var random = Random();
+    // tamanho max sera o tamanho da lista menos 1 (porque o indice comeca de 0 e nos contamos a partir
+    // de 1.
     int maxNumber = colorList.length - 1;
     int oldIndex = colorIndex;
+    // enquanto velho indice igual a novo, solicite um novo index
     while (colorIndex == oldIndex) {
       colorIndex = random.nextInt(maxNumber);
     }
   }
 
+  // Gerar uma posicao aleatoria dentro do plano definido.
   void randomPosition() {
     var random = Random();
-
+    // Pega o elemento que possui as informacoes visuas do widget (container nesse caso)
     final box = stickyKey.currentContext!.findRenderObject() as RenderBox;
+    // Pega o elemento que possui as informacoes visuas do widget (circleAvatar nesse caso)
     final circle = circlekey.currentContext!.findRenderObject() as RenderBox;
+    // Calcula o altura limite do container para posicionar a esfera
     double heightLimit = box.size.height - (circle.size.height);
+    // Calcula o largura limite do container para posicionar a esfera
     double widthLimit = box.size.width - (circle.size.width);
-
+    // Gera numero aleatorio dentro dos limites calculados e converte para inteiro e converte para double pois
+    // a posicicao eh definida em double
     verticalPosition = random.nextInt(heightLimit.toInt()).toDouble();
     horizontalPosition = random.nextInt(widthLimit.toInt()).toDouble();
     // print(
     //     "Vertical Position: $verticalPosition, Horizontal Position: $horizontalPosition");
   }
 
+  // Gera a esfera exibida na tela
   Widget generateBall(BuildContext context) {
     return CircleAvatar(
+      // Uso do globalKey para ter acesso externo as propriedades do widget
       key: circlekey,
       backgroundColor: colorList[colorIndex],
       radius: 10,
+      // Responsavel por detectar os eventos de toque
       child: GestureDetector(
         onTap: () {
           setState(() {
-            // Toggle light when tapped.
+            // Se nao foi inciado o contador inicia
             if (!_started) {
               startTimer(context);
               _started = true;
             }
+            // Enquanto o tempo nao encerrar chama as funcoes que muda posicao,
+            // cor e contagem dos pontos
             if (_start != 0) {
               randomPosition();
               countPoint();
@@ -122,13 +154,15 @@ class _TouchDetectorState extends State<TouchDetector> {
     );
   }
 
+  // Realiza a contagem dos pontos
   void countPoint() {
     points += 1; // points = points + 1
   }
 
+  // Inicializa o contador
   void startTimer(BuildContext context) {
     const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(
+    Timer.periodic(
       oneSec,
       (Timer timer) {
         if (_start == 0) {
@@ -145,6 +179,7 @@ class _TouchDetectorState extends State<TouchDetector> {
     );
   }
 
+  // reiniciar o jogo
   void restart() {
     setState(() {
       _start = initialTime;
@@ -155,14 +190,13 @@ class _TouchDetectorState extends State<TouchDetector> {
     });
   }
 
+  // Cria o dialog que exibe que o jogo encerrou e a quantidade pontos obtido.
   dynamic dialog(BuildContext context) {
     return showDialog(
       barrierDismissible: false,
       context: context,
       builder: (context) {
         return AlertDialog(
-          // Retrieve the text the user has entered by using the
-          // TextEditingController.
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
