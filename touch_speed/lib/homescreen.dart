@@ -14,7 +14,8 @@ class _MainScreenState extends State<MainScreen> {
         home: SafeArea(
             child: Scaffold(
                 body: Container(
-      child: Column(children: [
+      child: Column
+        children: [
         RichText(
             text: TextSpan(
                 text: "Touch Speed", style: DefaultTextStyle.of(context).style))
