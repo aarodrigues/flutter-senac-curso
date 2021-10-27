@@ -4,18 +4,20 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class TouchDetector extends StatefulWidget {
-  const TouchDetector({Key? key}) : super(key: key);
+class TouchBall extends StatefulWidget {
+  // O tempo inicial do contador regressivo
+  final initialTime;
+
+  const TouchBall({
+    Key? key,
+    required this.initialTime,
+  }) : super(key: key);
 
   @override
-  _TouchDetectorState createState() => _TouchDetectorState();
+  _TouchBallState createState() => _TouchBallState();
 }
 
-class _TouchDetectorState extends State<TouchDetector> {
-  // O tempo inicial do contador regressivo
-  static const initialTime = 3;
-  // Atribui o tempo inicial a variavel _start
-  int _start = initialTime;
+class _TouchBallState extends State<TouchBall> {
   // Define a variaveis do tipo GlobalKey responsaveis por acessar as propriedades do widget
   // com o qual ela esteja associada
   GlobalKey stickyKey = GlobalKey();
@@ -33,6 +35,8 @@ class _TouchDetectorState extends State<TouchDetector> {
     Colors.grey
   ];
 
+  // Atribui o tempo inicial a variavel _start
+  int _start = 0;
   // define a variavel index para a lista de cores e inicializa a variavel com o valor 0
   int colorIndex = 0;
   // Define a posicao vertical inicial do ponto
@@ -47,16 +51,18 @@ class _TouchDetectorState extends State<TouchDetector> {
   // Metodo flutter responsavel por criar a visualizacao da tela
   @override
   Widget build(BuildContext context) {
+    // Atribui o tempo inicial a variavel _start
+    _start = widget.initialTime;
     return MaterialApp(
       home: SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.grey[600],
+          backgroundColor: Colors.grey[800],
           appBar: AppBar(
             centerTitle: true,
             title: Text("Time: ${_start.toString()}  Points: $points",
                 style: const TextStyle(fontSize: 30),
                 textAlign: TextAlign.center),
-            backgroundColor: Colors.cyan[300],
+            backgroundColor: Colors.red[900],
           ),
           body: Padding(
             padding: const EdgeInsets.all(20),
@@ -131,7 +137,7 @@ class _TouchDetectorState extends State<TouchDetector> {
       // Uso do globalKey para ter acesso externo as propriedades do widget
       key: circlekey,
       backgroundColor: colorList[colorIndex],
-      radius: 10,
+      radius: 20,
       // Responsavel por detectar os eventos de toque
       child: GestureDetector(
         onTap: () {
@@ -161,7 +167,7 @@ class _TouchDetectorState extends State<TouchDetector> {
 
   // Inicializa o contador
   void startTimer(BuildContext context) {
-    const oneSec = Duration(seconds: 1);
+    const oneSec = Duration(milliseconds: 1);
     Timer.periodic(
       oneSec,
       (Timer timer) {
@@ -182,7 +188,7 @@ class _TouchDetectorState extends State<TouchDetector> {
   // reiniciar o jogo
   void restart() {
     setState(() {
-      _start = initialTime;
+      _start = widget.initialTime;
       _started = false;
       points = 0;
       verticalPosition = 315;

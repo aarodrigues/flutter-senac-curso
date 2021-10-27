@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:touch_speed/screens/home.dart';
-import 'package:touch_speed/screens/touch_speed.dart';
-import 'package:touch_speed/homescreen.dart';
+import 'package:touch_speed/screens/home_menu.dart';
 
 void main() {
-  runApp(const MainScreen());
+  runApp(const MainScreen(initialTime: 5000));
 }
