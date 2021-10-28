@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:touch_speed/models/configurations.dart';
 
 class Configuration extends StatefulWidget {
   const Configuration({Key? key}) : super(key: key);
@@ -46,9 +47,9 @@ class _ConfigurationState extends State<Configuration> {
                       },
                     ),
                     ElevatedButton(
-                      onPressed: () => Navigator.of(context).pushNamed(
-                          "/touch-ball",
-                          arguments: _currentSliderValue.toInt()),
+                      onPressed: () => Navigator.of(context).pop(
+                          ConfigurationItens(
+                              _currentSliderValue.toInt(), 10, true)),
                       child: const Text("Save"),
                     )
                   ],

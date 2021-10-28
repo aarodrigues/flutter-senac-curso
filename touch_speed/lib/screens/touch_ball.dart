@@ -3,14 +3,15 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:touch_speed/models/configurations.dart';
 
 class TouchBall extends StatefulWidget {
   // O tempo inicial do contador regressivo
-  final initialTime;
+  final configItem;
 
   const TouchBall({
     Key? key,
-    required this.initialTime,
+    required this.configItem,
   }) : super(key: key);
 
   @override
@@ -37,6 +38,13 @@ class _TouchBallState extends State<TouchBall> {
 
   // Atribui o tempo inicial a variavel _start
   int _start = 0;
+
+  @override
+  void initState() {
+    // Atribui o tempo inicial a variavel _start
+    _start = widget.configItem.initialTime;
+  }
+
   // define a variavel index para a lista de cores e inicializa a variavel com o valor 0
   int colorIndex = 0;
   // Define a posicao vertical inicial do ponto
@@ -51,8 +59,6 @@ class _TouchBallState extends State<TouchBall> {
   // Metodo flutter responsavel por criar a visualizacao da tela
   @override
   Widget build(BuildContext context) {
-    // Atribui o tempo inicial a variavel _start
-    _start = widget.initialTime;
     return MaterialApp(
       home: SafeArea(
         child: Scaffold(
@@ -188,7 +194,7 @@ class _TouchBallState extends State<TouchBall> {
   // reiniciar o jogo
   void restart() {
     setState(() {
-      _start = widget.initialTime;
+      _start = widget.configItem.initialTime;
       _started = false;
       points = 0;
       verticalPosition = 315;

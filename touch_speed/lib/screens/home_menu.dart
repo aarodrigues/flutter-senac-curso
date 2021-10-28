@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:touch_speed/models/configurations.dart';
 
 import '../route_generate.dart';
 
 class MainScreen extends StatefulWidget {
-  final initialTime;
   const MainScreen({
     Key? key,
-    required this.initialTime,
   }) : super(key: key);
 
   @override
@@ -16,7 +15,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
-    int initial_time = 8000; //widget.initialTime;
+    ConfigurationItens items = new ConfigurationItens(8000, 20, true);
     return MaterialApp(
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,
@@ -57,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
                         ),
                       ),
                       onPressed: () => Navigator.of(context)
-                          .pushNamed("/touch-ball", arguments: initial_time),
+                          .pushNamed("/touch-ball", arguments: items),
                       child: const Text(
                         "Touch Ball Speed",
                         style: TextStyle(fontSize: 20.0),
@@ -92,8 +91,12 @@ class _MainScreenState extends State<MainScreen> {
                           const Size(180.0, 60.0),
                         ),
                       ),
-                      onPressed: () =>
-                          Navigator.of(context).pushNamed("/configuration"),
+                      onPressed: () async {
+                        final result = await Navigator.of(context)
+                            .pushNamed("/configuration") as ConfigurationItens;
+                        items = result;
+                        print("kkkkk => ${result.initialTime}");
+                      },
                       child: const Text(
                         "Configurations",
                         style: TextStyle(fontSize: 20.0),

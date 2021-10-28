@@ -10,9 +10,9 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => MainScreen(initialTime: args));
+        return MaterialPageRoute(builder: (_) => const MainScreen());
       case '/touch-ball':
-        return MaterialPageRoute(builder: (_) => TouchBall(initialTime: args));
+        return MaterialPageRoute(builder: (_) => TouchBall(configItem: args));
       case '/touch-speed':
         return MaterialPageRoute(builder: (_) => const TouchSpeed());
       case '/configuration':
