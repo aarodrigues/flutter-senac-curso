@@ -38,11 +38,15 @@ class _TouchBallState extends State<TouchBall> {
 
   // Atribui o tempo inicial a variavel _start
   int _start = 0;
+  double _ballRadius = 10.0;
+  bool _changeColor = false;
 
   @override
   void initState() {
     // Atribui o tempo inicial a variavel _start
     _start = widget.configItem.initialTime;
+    _ballRadius = widget.configItem.ballSize;
+    _changeColor = widget.configItem.changeColor;
   }
 
   // define a variavel index para a lista de cores e inicializa a variavel com o valor 0
@@ -143,10 +147,11 @@ class _TouchBallState extends State<TouchBall> {
       // Uso do globalKey para ter acesso externo as propriedades do widget
       key: circlekey,
       backgroundColor: colorList[colorIndex],
-      radius: 20,
+      radius: _ballRadius,
       // Responsavel por detectar os eventos de toque
       child: GestureDetector(
         onTap: () {
+          print(_ballRadius);
           setState(() {
             // Se nao foi inciado o contador inicia
             if (!_started) {
@@ -158,7 +163,9 @@ class _TouchBallState extends State<TouchBall> {
             if (_start != 0) {
               randomPosition();
               countPoint();
-              randomColor();
+              if (_changeColor) {
+                randomColor();
+              }
             }
           });
         },

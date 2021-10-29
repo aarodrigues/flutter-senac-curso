@@ -9,54 +9,85 @@ class Configuration extends StatefulWidget {
 }
 
 class _ConfigurationState extends State<Configuration> {
-  double _currentSliderValue = 20;
+  double _currentSliderValue = 2500;
+  double _currentSliderBallSizeValue = 25;
+  bool isChecked = false;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: SafeArea(
         child: Scaffold(
-          body: Container(
-            child: TextButton(
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                minimumSize: MaterialStateProperty.all<Size>(
-                  const Size(60.0, 10.0),
+          backgroundColor: Colors.lightBlue[200],
+          body: Stack(children: [
+            Center(
+              child: Image.asset('assets/images/background2.jpg'),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 120,
                 ),
-              ),
-              onPressed: () {
-                print("Text button!");
-              },
-              child: Stack(children: [
-                Image.asset('assets/images/background2.jpg'),
-                Column(
+                const Text(
+                  "Speed",
+                  style: TextStyle(fontSize: 20),
+                ),
+                Slider(
+                  value: _currentSliderValue,
+                  min: 0,
+                  max: 5000,
+                  divisions: 100,
+                  label: _currentSliderValue.round().toString(),
+                  onChanged: (double value) {
+                    setState(() {
+                      _currentSliderValue = value;
+                    });
+                  },
+                ),
+                const Text(
+                  "Ball size",
+                  style: TextStyle(fontSize: 20),
+                ),
+                Slider(
+                  value: _currentSliderBallSizeValue,
+                  min: 0,
+                  max: 50,
+                  divisions: 25,
+                  label: _currentSliderBallSizeValue.round().toString(),
+                  onChanged: (double value) {
+                    setState(() {
+                      _currentSliderBallSizeValue = value;
+                    });
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "Speed",
-                      style: TextStyle(fontSize: 40),
+                      "Change Color:",
+                      style: TextStyle(fontSize: 20),
                     ),
-                    Slider(
-                      value: _currentSliderValue,
-                      min: 0,
-                      max: 5000,
-                      divisions: 100,
-                      label: _currentSliderValue.round().toString(),
-                      onChanged: (double value) {
+                    Checkbox(
+                      checkColor: Colors.white,
+                      value: isChecked,
+                      onChanged: (bool? value) {
                         setState(() {
-                          _currentSliderValue = value;
+                          isChecked = value!;
                         });
                       },
                     ),
-                    ElevatedButton(
-                      onPressed: () => Navigator.of(context).pop(
-                          ConfigurationItens(
-                              _currentSliderValue.toInt(), 10, true)),
-                      child: const Text("Save"),
-                    )
                   ],
                 ),
-              ]),
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(ConfigurationItens(
+                      _currentSliderValue.toInt(),
+                      _currentSliderBallSizeValue,
+                      isChecked)),
+                  child: const Text("Save"),
+                )
+              ],
             ),
-          ),
+          ]),
         ),
       ),
     );
